@@ -17,30 +17,37 @@ function Form() {
   const [formErrors, setFormErrors] = useState([]);
   const [disabled, setDisabled] = useState(true);
 
-  const onInputChange = (event) => {
-    const {name, value} = event.target;
+  //check form for errors, and setFormErrors as necessary
+  const throwErrors = (name, value) => {
     yup
       .reach(formSchema, name)
-      //we can then run validate using the value
       .validate(value)
-      // if the validation is successful, we can clear the error message
       .then(valid => {
         setFormErrors({
           ...formErrors,
           [name]: ""
         });
       })
-      /* if the validation is unsuccessful, we can set the error message to the message 
-        returned from yup (that we created in our schema) */
       .catch(err => {
         setFormErrors({
           ...formErrors,
           [name]: err.errors[0]
         });
       });
-    setFormData({...formData, [name]: value})
+ }
+
+  const onInputChange = (event) => {
+    const {name, value} = event.target;
+      throwErrors(name, value);
+      setFormData({...formData, [name]: value})
   }
 
+  const onCheckboxChange = (event) => {
+    const {name, checked} = event.target;
+    throwErrors(name, checked);
+    setFormData({...formData, [name]: checked})
+  }
+  //catch changes and validate. Disable/Enable submit button accordingly
   useEffect(() => {
     formSchema.isValid(formData).then(valid => {
     setDisabled(!valid);
@@ -68,7 +75,38 @@ function Form() {
           onChange={onInputChange}
         />
       </label>
+      <label>E-mail:&nbsp; 
+        <input
+          type='email'
+          name='email'
+          value={formData.email}
+          onChange={onInputChange}
+        />
+      </label>
+      <label>Password:&nbsp; 
+        <input
+          type='password'
+          name='password'
+          value={formData.password}
+          onChange={onInputChange}
+        />
+      </label>
+      <label>I agree to the Terms of Service:&nbsp; 
+        <input
+          type='checkbox'
+          name='tos'
+          checked={formData.tos}
+          onChange={onCheckboxChange}
+        />
+      </label>
+      <div className='errors'>
+        <p>{formErrors.username}</p>
+        <p>{formErrors.email}</p>
+        <p>{formErrors.password}</p>
+        <p>{formErrors.tos}</p>
+      </div>
       <button disabled={disabled} onClick={submitData} >Submit</button>
+
     </form>
   )
 }
