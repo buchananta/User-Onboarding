@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios'; 
 import * as yup from 'yup';
 import formSchema from '../validation/formSchema';
+
 //skeleton for various data
 const defaultFormData = {
   'username': '',
@@ -9,8 +10,6 @@ const defaultFormData = {
   'password': '',
   'tos': false,
 }
-
-
 
 function Form({userData, setUserData}) {
   const [formData, setFormData] = useState(defaultFormData);
@@ -64,6 +63,7 @@ function Form({userData, setUserData}) {
     axios.post('https://reqres.in/api/users', accountData)
       .then(res => {
         console.log(res)
+        //push response into state 
         setUserData(userData.concat(res.data))
       })
       .catch(error => console.log(error))

@@ -8,6 +8,7 @@ const formSchema = yup.object().shape({
   email: yup
     .string()
     .email("Must be a valid email address.")
+    .notOneOf(["waffle@syrup.com"], "That email is already Taken.")
     .required("Must include email address."),
   password: yup
     .string()

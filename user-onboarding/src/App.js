@@ -8,6 +8,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <h1>User Onboarding</h1>
       </header>
       <Form userData={userData} setUserData={setUserData} />
       
@@ -15,6 +16,7 @@ function App() {
         {userData.map(user => {
           return (
           <pre className="user" key={user.id}>
+            <h4>{user.username}</h4>
             {JSON.stringify(user)}
           </pre> )
         })}
