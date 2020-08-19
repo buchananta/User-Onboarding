@@ -12,7 +12,7 @@ const defaultFormData = {
 
 
 
-function Form() {
+function Form({userData, setUserData}) {
   const [formData, setFormData] = useState(defaultFormData);
   const [formErrors, setFormErrors] = useState([]);
   const [disabled, setDisabled] = useState(true);
@@ -35,7 +35,7 @@ function Form() {
         });
       });
  }
-
+  //keep state updated with form values
   const onInputChange = (event) => {
     const {name, value} = event.target;
       throwErrors(name, value);
@@ -54,14 +54,18 @@ function Form() {
     })
   }, [formData])
 
+  //catch submit to prevent page refresh
   const submitData = (event) => {
     event.preventDefault();
     createAccount(formData);  
   }
-
+  //send data to server
   const createAccount = (accountData) => {
     axios.post('https://reqres.in/api/users', accountData)
-      .then(res => console.log(res))
+      .then(res => {
+        console.log(res)
+        setUserData(userData.concat(res.data))
+      })
       .catch(error => console.log(error))
   }
 
