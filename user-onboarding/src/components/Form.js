@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios'; 
 import * as yup from 'yup';
 import formSchema from '../validation/formSchema';
@@ -12,7 +12,7 @@ const defaultFormData = {
 
 
 
-function Form({inputChange}) {
+function Form() {
   const [formData, setFormData] = useState(defaultFormData);
   const [formErrors, setFormErrors] = useState([]);
   const [disabled, setDisabled] = useState(true);
@@ -41,9 +41,11 @@ function Form({inputChange}) {
     setFormData({...formData, [name]: value})
   }
 
-  formSchema.isValid(formData).then(valid => {
+  useEffect(() => {
+    formSchema.isValid(formData).then(valid => {
     setDisabled(!valid);
-  })
+    })
+  }, [formData])
 
   const submitData = (event) => {
     event.preventDefault();
