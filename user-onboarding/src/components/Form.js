@@ -56,7 +56,8 @@ function Form({userData, setUserData}) {
   //catch submit to prevent page refresh
   const submitData = (event) => {
     event.preventDefault();
-    createAccount(formData);  
+    createAccount(formData); 
+    setFormData(defaultFormData);
   }
   //send data to server
   const createAccount = (accountData) => {

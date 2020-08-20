@@ -20,5 +20,51 @@ describe('Form Tests', () => {
         .should('have.value', 'password')
     })
   })
-
+  describe('Check ToS checkbox', () => {
+    it('check box', () => {
+      cy.get('input[name="tos"]').click()
+        .should('be.checked')
+    })
+  })
+  describe('Submitting Form', () => {
+    it('submit button clickable', () => {
+      cy.get('button').should('be.enabled')
+    })
+    it('form submits', () => {
+      //check the actual network request response
+      cy.server()
+      cy.route('POST', 'api/users').as('postUser')
+      cy.get('button').click()
+      cy.wait('@postUser').its('status').should('eq', 201)
+    })
+    it('response displayed in webpage', () => {
+      cy.contains('{"username":"foobar","email":"foo@bar.baz","password":"password","tos":true')
+    })
+  })
+  describe('Form Validation', () => {
+    it('disabled when empty', () => {
+      cy.get('button').should('be.disabled')
+    })
+    it('enabled with all fields', () => {
+      cy.get('input[name="username"]').type('username')
+      cy.get('input[name="email"]').type('foo@bar.baz')
+      cy.get('input[name="password"]').type('password')
+      cy.get('input[name="tos"]').click()
+      cy.get('button').should('be.enabled')
+    })
+    it('disabled if missing username', () => {
+      cy.get('input[name="username"]').clear()
+      cy.get('button').should('be.disabled')
+    })
+    it('disabled if missing email', () => {
+      cy.get('input[name="username"]').type('username')
+      cy.get('input[name="email"]').clear()
+      cy.get('button').should('be.disabled')
+    })
+    it('disabled if missing password', () => {
+      cy.get('input[name="email"]').type('foo@bar.baz')
+      cy.get('input[name="password"]').clear()
+      cy.get('button').should('be.disabled')
+    })
+  })
 })
