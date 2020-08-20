@@ -46,10 +46,9 @@ describe('Form Tests', () => {
       cy.get('button').should('be.disabled')
     })
     it('enabled with all fields', () => {
-      cy.get('input[name="username"]').type('username')
-      cy.get('input[name="email"]').type('foo@bar.baz')
-      cy.get('input[name="password"]').type('password')
-      cy.get('input[name="tos"]').click()
+      //.each working!
+      cy.get('input').each(i => cy.wrap(i).type('valid@for.all'))
+      //cy.get('input[name="tos"]').click()
       cy.get('button').should('be.enabled')
     })
     it('disabled if missing username', () => {
